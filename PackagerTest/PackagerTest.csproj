@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="openapi.yaml" Pack="true" PackagePath="content/openapi.yaml" />
+    <EmbeddedResource Include="openapi.yaml" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,48 @@
+name: Build and Publish NuGet
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  pull_request:
+    branches: [master]
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore PackagerTest.csproj
+
+      - name: Build
+        run: dotnet build PackagerTest.csproj --no-restore --configuration Release
+
+      - name: Pack
+        run: dotnet pack PackagerTest.csproj --no-build --configuration Release --output ./nupkg
+
+      - name: Publish to GitHub Packages
+        if: github.event_name == 'push'
+        run: |
+          dotnet nuget add source \
+            --username neilcarberry \
+            --password ${{ secrets.GITHUB_TOKEN }} \
+            --store-password-in-clear-text \
+            --name github \
+            "https://nuget.pkg.github.com/neilcarberry/index.json"
+          dotnet nuget push ./nupkg/*.nupkg \
+            --source github \
+            --skip-duplicate

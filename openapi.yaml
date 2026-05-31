@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Pi Generation Leaderboard API
+  description: Track and compare Pi calculation generation times.
+  version: v1
+
+paths:
+  /leaderboard:
+    get:
+      operationId: GetTopTen
+      summary: Get top 10 fastest Pi generation times
+      description: Returns the ten fastest recorded Pi calculation times, ordered by elapsed milliseconds ascending.
+      responses:
+        '200':
+          description: Top ten generation times
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GenerationTime'
+
+  /times:
+    post:
+      operationId: PostTime
+      summary: Submit a new Pi generation time
+      description: Records a new Pi calculation time entry for the leaderboard.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostGenerationTimeRequest'
+      responses:
+        '201':
+          description: Entry created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationTime'
+        '422':
+          description: Validation error
+
+  /times/{id}:
+    patch:
+      operationId: PatchTime
+      summary: Update an existing Pi generation time
+      description: Partially updates a recorded generation time entry by ID. Only provided fields are changed.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchGenerationTimeRequest'
+      responses:
+        '200':
+          description: Updated entry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerationTime'
+        '404':
+          description: Entry not found
+
+components:
+  schemas:
+    GenerationTime:
+      type: object
+      required: [id, playerName, decimalPlaces, elapsedMilliseconds, recordedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        playerName:
+          type: string
+        decimalPlaces:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        elapsedMilliseconds:
+          type: number
+          format: double
+        recordedAt:
+          type: string
+          format: date-time
+
+    PostGenerationTimeRequest:
+      type: object
+      required: [playerName, decimalPlaces, elapsedMilliseconds]
+      properties:
+        playerName:
+          type: string
+        decimalPlaces:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        elapsedMilliseconds:
+          type: number
+          format: double
+
+    PatchGenerationTimeRequest:
+      type: object
+      properties:
+        playerName:
+          type: string
+          nullable: true
+        decimalPlaces:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          nullable: true
+        elapsedMilliseconds:
+          type: number
+          format: double
+          nullable: true

@@ -7,7 +7,7 @@
 
     <!-- NuGet package metadata -->
     <PackageId>PackagerTest</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>neilcarberry</Authors>
     <Description>Pi calculation library with a typed HTTP client for the Pi Generation Leaderboard API.</Description>
     <PackageTags>pi;leaderboard;calculator</PackageTags>
@@ -17,5 +17,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="openapi.yaml" Pack="true" PackagePath="content/openapi.yaml" />
+  </ItemGroup>
 
 </Project>

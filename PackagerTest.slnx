@@ -3,5 +3,6 @@
   <Folder Name="/Solution Items/workflows/">
     <File Path=".github/workflows/publish.yml" />
   </Folder>
-  <Project Path="PackagerTest.csproj" />
+  <Project Path="PackagerTest/PackagerTest.csproj" />
+  <Project Path="testproj/Test/Test.csproj" Id="8c524530-b932-4458-a041-473470fdf453" />
 </Solution>

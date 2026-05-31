@@ -27,13 +27,13 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore PackagerTest.csproj
+        run: dotnet restore PackagerTest/PackagerTest.csproj
 
       - name: Build
-        run: dotnet build PackagerTest.csproj --no-restore --configuration Release
+        run: dotnet build PackagerTest/PackagerTest.csproj --no-restore --configuration Release
 
       - name: Pack
-        run: dotnet pack PackagerTest.csproj --no-build --configuration Release --output ./nupkg
+        run: dotnet pack PackagerTest/PackagerTest.csproj --no-build --configuration Release --output ./nupkg
 
       - name: Publish to GitHub Packages
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
